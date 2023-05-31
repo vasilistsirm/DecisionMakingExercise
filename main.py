@@ -10,10 +10,6 @@ from faker import Faker
 import random
 import requests
 
-"""""
-community_graph= nx.barabasi_albert_graph(20,3)
-nx.draw(community_graph, with_labels=True)
-"""""
 
 "(a.) erwthma"
 # Connect to the MySQL server

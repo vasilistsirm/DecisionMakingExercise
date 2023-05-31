@@ -19,4 +19,5 @@ of Band Names βλέπουμε πόσες φορές εμφανίστηκε το
 
 Τα στ, ζ ερώτημα βρίσκονται στο αρχείο time_series_decomp_analysis.py.
 
-
+Το ερώτημα η βρίσκεται στο αρχείο community_graph_analysis.py και χρησιμοποίησα το community_graph = nx.barabasi_albert_graph(20, 3) που δόθηκε μαζί με τα tables users,discs για να προτείνω dics που δεν έχουν
+στους users.
