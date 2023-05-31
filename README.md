@@ -21,3 +21,5 @@ of Band Names βλέπουμε πόσες φορές εμφανίστηκε το
 
 Το ερώτημα η βρίσκεται στο αρχείο community_graph_analysis.py και χρησιμοποίησα το community_graph = nx.barabasi_albert_graph(20, 3) που δόθηκε μαζί με τα tables users,discs για να προτείνω dics που δεν έχουν
 στους users.
+
+Το ερώτημα θ βρίσκεται στο αρχείο genetic_algorithm.py
