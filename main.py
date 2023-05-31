@@ -73,9 +73,28 @@ cursor.execute(create_bands_table)
 cursor.execute(create_discs_table)
 
 
+# Create the genres table
+create_genres_table = """
+CREATE TABLE IF NOT EXISTS genres (
+  genre_id INT AUTO_INCREMENT PRIMARY KEY,
+  genre_name VARCHAR(255)
+)
+"""
+cursor.execute(create_genres_table)
+
+
+# Add genre_id column to the discs table
+alter_discs_table_query = "ALTER TABLE discs ADD COLUMN genre_id INT, ADD FOREIGN KEY (genre_id) REFERENCES genres(genre_id)"
+cursor.execute(alter_discs_table_query)
+
+
+# Add age column to the users table
+alter_users_table_query = "ALTER TABLE users ADD COLUMN age INT"
+cursor.execute(alter_users_table_query)
+
+
 # Generate random user data
 fake = Faker()
-
 
 def generate_user_data(num_users):
     users_data = []
@@ -94,8 +113,8 @@ def generate_user_data(num_users):
 
 # Insert random user data into the Users table
 def insert_users(users_data):
-    insert_query = "INSERT INTO Users (username, email) VALUES (%s, %s)"
-    users_values = [(user['username'], user['email']) for user in users_data]
+    insert_query = "INSERT INTO Users (username, email, age) VALUES (%s, %s, %s)"
+    users_values = [(user['username'], user['email'], random.randint(18, 60)) for user in users_data]
     cursor.executemany(insert_query, users_values)
     cnx.commit()
 
@@ -128,32 +147,75 @@ def fetch_bands_data(username):
         print(f"Failed to fetch band data for user {username} from Last.fm API")
 
 
-# Function to fetch album data from last.fm API and insert into Albums table
+# Function to fetch album data from Last.fm API and insert into Discs table
 def fetch_discs_data(band_id, band_name, username):
-
-        # Fetch album data for the band from Last.fm API
-        url = f"http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist={band_name}&api_key={api_key}&format=json&limit=5"
+    # Function to fetch genre data from Last.fm API and insert into Genres table
+    def fetch_genres_data(band_name):
+        # Fetch tag data for the band from Last.fm API
+        url = f"http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist={band_name}&api_key={api_key}&format=json"
         response = requests.get(url)
 
         if response.status_code == 200:
-            albums_data = response.json().get('topalbums').get('album', [])
+            tags_data = response.json().get('toptags').get('tag', [])
 
-            if albums_data:
-                # Limit the number of owned discs to 1 for each favorite band/artist of the given user
-                owned_discs = albums_data[:1]
+            if tags_data:
+                genre_ids = []
+                for tag in tags_data:
+                    genre_name = tag.get('name')
+                    # Check if the genre already exists in the Genres table
+                    select_genre_query = "SELECT genre_id FROM Genres WHERE genre_name = %s"
+                    cursor.execute(select_genre_query, (genre_name,))
+                    genre_result = cursor.fetchone()
 
-                # Process and insert the album data into the Discs table
-                for album in owned_discs:
-                    disc_id = str(uuid.uuid4())
-                    disc_name = album.get('name')
-                    price = random.randint(10, 50)  # Random price between 10 and 50
+                    if genre_result:
+                        genre_id = genre_result[0]
+                    else:
+                        # Insert the genre into the Genres table
+                        insert_genre_query = "INSERT INTO Genres (genre_name) VALUES (%s)"
+                        cursor.execute(insert_genre_query, (genre_name,))
+                        cnx.commit()
+                        genre_id = cursor.lastrowid
 
-                    insert_query = "INSERT INTO Discs (disc_id, band_name, disc_name, price, band_id, username) VALUES (%s, %s, %s, %s, %s, %s)"
-                    discs_values = (disc_id, band_name, disc_name, price, band_id, username)
+                    genre_ids.append(genre_id)
+
+                return genre_ids
+            else:
+                print(f"No tags/genres found for band {band_name}")
+                return None
+        else:
+            print(f"Failed to fetch tag data for band {band_name} from Last.fm API")
+            return None
+
+    # Fetch album data for the band from Last.fm API (to get disc details)
+    url = f"http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist={band_name}&api_key={api_key}&format=json&limit=5"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        albums_data = response.json().get('topalbums').get('album', [])
+
+        if albums_data:
+            # Limit the number of owned discs to 1 for each favorite band/artist of the given user
+            owned_discs = albums_data[:1]
+
+            for album in owned_discs:
+                disc_id = str(uuid.uuid4())
+                disc_name = album.get('name')
+                price = random.randint(10, 50)  # Random price between 10 and 50
+
+                genres = fetch_genres_data(band_name)
+
+                if genres:
+                    # Process and insert the album data into the Discs table
+                    genre_id = genres[0]  # Assuming the first genre is the primary genre
+                    insert_query = "INSERT INTO Discs (disc_id, band_name, disc_name, price, band_id, username, genre_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                    discs_values = (disc_id, band_name, disc_name, price, band_id, username, genre_id)
                     cursor.execute(insert_query, discs_values)
                     cnx.commit()
+
         else:
-            print(f"Failed to fetch album data for band {band_name} from Last.fm API")
+            print(f"No albums found for band {band_name}")
+    else:
+        print(f"Failed to fetch album data for band {band_name} from Last.fm API")
 
 
 # Retrieve data from the Users table
@@ -193,12 +255,22 @@ for band in bands_data:
     print(band)
 
 # Retrieve data from the Albums table
-select_discs_query = "SELECT band_name, disc_name, price, username FROM Discs"
+select_discs_query = "SELECT band_name, disc_name, price, username, genre_id FROM Discs"
 cursor.execute(select_discs_query)
 discs_data = cursor.fetchall()
 print("Discs:")
 for disc in discs_data:
     print(disc)
+
+
+# Retrieve and print data from the Genres table
+select_genres_query = "SELECT * FROM Genres"
+cursor.execute(select_genres_query)
+genres_data = cursor.fetchall()
+print("Genres:")
+for genre in genres_data:
+    print(genre)
+
 
 # Close the cursor and the connection
 cursor.close()
