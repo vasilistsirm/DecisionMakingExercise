@@ -54,14 +54,20 @@ def crossover(selected_population):
         parent1, parent2 = selected_population[parent_indices]
         parent1 = parent1.reshape(user_money_rates.shape[0], 3)
         parent2 = parent2.reshape(user_money_rates.shape[0], 3)
-        crossover_points = sorted(np.random.choice(range(1, parent1.shape[0]), size=2, replace=False))
-        child = np.concatenate((parent1[:crossover_points[0]].flatten(), parent2[crossover_points[0]:crossover_points[1]].flatten(),
-                                parent1[crossover_points[1]:].flatten()))
-        for i in range(child.shape[0]):
-            if np.random.rand() < mutation_rate:
-                child[i] = np.random.choice(album_price)
+
+        # Generate child
+        child = np.zeros(user_money_rates.shape[0] * 3)
+        for i in range(user_money_rates.shape[0]):
+            price_range = album_price[album_price <= users_money[i]]
+            if len(price_range) > 0:
+                child[(i * 3) + 1] = np.random.choice(price_range)
+            else:
+                child[(i * 3) + 1] = album_price[0]
+            child[(i * 3) + 2] = np.random.choice(user_money_rates[:, 1])
+
         new_population.append(child)
     return new_population
+
 
 # Main loop
 initial_population = initialize_population()
