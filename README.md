@@ -24,3 +24,5 @@ of Band Names βλέπουμε πόσες φορές εμφανίστηκε το
 
 Το ερώτημα θ βρίσκεται στο αρχείο genetic_algorithm.py
 
+Το λινκ για το βίντεο που εξηγώ τον κώδικα είναι το εξής: https://www.youtube.com/watch?v=xNScTDLPhpk
+
