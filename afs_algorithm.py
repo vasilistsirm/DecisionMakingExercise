@@ -28,7 +28,7 @@ def calculate_individual_fitness(fish, i):
     return total_score
 
 
-# Create initial fish population (unchanged)
+# Create initial fish population
 def initialize_fish_population():
     initial_fish_population = []
     for _ in range(num_fish):
@@ -41,7 +41,7 @@ def initialize_fish_population():
     return initial_fish_population
 
 
-# Update fish position and behavior (unchanged)
+# Update fish position and behavior
 def update_fish(fish):
     new_fish_population = []
     for i in range(num_fish):
@@ -55,7 +55,7 @@ def update_fish(fish):
     return new_fish_population
 
 
-# Get neighboring fish within the visual range (unchanged)
+# Get neighboring fish within the visual range
 def get_neighbors(fish, population):
     neighbors = []
     for other_fish in population:
@@ -64,14 +64,14 @@ def get_neighbors(fish, population):
     return neighbors
 
 
-# Move the fish towards its neighbors (unchanged)
+# Move the fish towards its neighbors
 def move_towards_neighbors(fish, neighbors):
     for neighbor in neighbors:
         if calculate_individual_fitness(neighbor, 0) > calculate_individual_fitness(fish, 0):
             fish += step_size * (neighbor - fish)
 
 
-# Move the fish to a new position (unchanged)
+# Move the fish to a new position
 def move_to_new_position(fish):
     for i in range(user_money_rates.shape[0]):
         price_range = album_price[(album_price <= users_money[i]) & (album_price >= fish[(i * 3) + 1])]
