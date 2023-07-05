@@ -18,7 +18,7 @@ user_money_rates = np.delete(user_money_rates, (0), axis=0)
 album_price = np.random.randint(50, size=100) + 1
 
 
-# Define fitness function (unchanged)
+# Define fitness function
 def calculate_individual_fitness(fish, i):
     fish = fish.reshape(user_money_rates.shape[0], 3)
     total_score = np.sum(fish[:, 1] * fish[:, 2])
