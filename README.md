@@ -1,4 +1,5 @@
 This repo includes my code to an assignment on Decision Making using Python. I took data from last.fm and answered the assignment's questions to the corresponding .py files.
+Some parts are excluded (API keys, IP adress to connect to a database) so that I protect my privacy. 
 
 # DecisionMakingExercise
 Τα ερωτήματα α, β βρίσκονται στην main.py.
