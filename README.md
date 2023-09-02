@@ -1,3 +1,5 @@
+This repo includes my code to an assignment on Decision Making using Python. I took data from last.fm and answered the assignment's questions to the corresponding .py files.
+
 # DecisionMakingExercise
 Τα ερωτήματα α, β βρίσκονται στην main.py.
 
@@ -24,7 +26,7 @@ of Band Names βλέπουμε πόσες φορές εμφανίστηκε το
 
 Το ερώτημα θ βρίσκεται στο αρχείο genetic_algorithm.py
 
-Το λινκ για το βίντεο που εξηγώ τον κώδικα είναι το εξής: https://www.youtube.com/watch?v=xNScTDLPhpk
+
 
 
 
