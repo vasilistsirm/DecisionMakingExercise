@@ -12,12 +12,12 @@ import requests
 
 
 "(a.) erwthma"
-# Connect to the MySQL server
+# Connect to the MySQL server FILL IN WITH YOUR OWN DATA(where host provide the IP address of your pc)
 cnx = mysql.connector.connect(
-    host="192.168.2.6",
-    user="bill",
-    password="bill123",
-    database="bill1"
+    host="",
+    user="",
+    password="",
+    database=""
 )
 
 
@@ -106,7 +106,8 @@ insert_users(users_data)
 
 
 "(b.) erwthma"
-api_key = "bd0838c4bd7b715c5cd525eb6d6c614a"
+# The api key from last.fm
+api_key = ""
 
 
 # Function to fetch band data from Last.fm API and insert into Bands table
