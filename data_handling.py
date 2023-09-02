@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 def handle_data_issues():
     # Connect to the MySQL server
-    engine = create_engine('mysql+mysqlconnector://bill:bill123@192.168.2.6/bill1')
+    engine = create_engine('mysql+mysqlconnector://')
 
     # Read the Bands, Discs, and Users tables into DataFrames
     bands_df = pd.read_sql_table('bands', engine)
