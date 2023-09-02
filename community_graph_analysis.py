@@ -4,10 +4,10 @@ import mysql.connector
 
 # Connect to the MySQL server
 cnx = mysql.connector.connect(
-    host="192.168.2.6",
-    user="bill",
-    password="bill123",
-    database="bill1"
+    host="",
+    user="",
+    password="",
+    database=""
 )
 
 # Create the cursor
