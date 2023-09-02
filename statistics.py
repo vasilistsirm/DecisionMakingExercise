@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # Connect to the MySQL server using SQLAlchemy
-engine = create_engine('mysql+mysqlconnector://bill:bill123@192.168.2.6/bill1')
+engine = create_engine('mysql+mysqlconnector://')
 
 # Fetch data from the Users, Bands, and Discs tables
 users_query = "SELECT * FROM users"
