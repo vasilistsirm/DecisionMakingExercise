@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
 # Connect to the MySQL server
-engine = create_engine('mysql+mysqlconnector://bill:bill123@192.168.2.6/bill1')
+engine = create_engine('mysql+mysqlconnector://')
 
 # Read the 'discs' table into a DataFrame
 discs_df = pd.read_sql_table('discs', engine)
